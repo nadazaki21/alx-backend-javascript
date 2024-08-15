@@ -1,43 +1,59 @@
-import Currency from "./3-currency";
+import Currency from './3-currency';
 
-export default class Pricing extends Currency {
-    constructor(amount, currency) {
+class Pricing {
+  constructor(amount, currency) {
+    this.amount = amount;
+    this.currency = currency;
+  }
 
-        super(currency);
-        this._amount = amount;
-        this._name = currency._name;
-        this._code = currency._code;
-        this._currency = currency;
+  /**
+   * @param {Number} amount
+   */
+  set amount(amount) {
+    if (typeof amount !== 'number') {
+      throw new TypeError('Amount must be a Number');
+    }
+    this._amount = amount;
+  }
+
+  get amount() {
+    return this._amount;
+  }
+
+  /**
+   * @param {Currency} currency
+   */
+  set currency(currency) {
+    if (currency instanceof Currency) {
+      this._currency = currency;
+    } else {
+      throw new TypeError('currency must be an instance of Currency');
+    }
+  }
+
+  get currency() {
+    return this._currency;
+  }
+
+  displayFullPrice() {
+    return `${this.amount} ${this.currency.displayFullCurrency()}`;
+  }
+
+  /**
+   * @param {Number} amount
+   * @param {Number} conversionRate
+   */
+  static convertPrice(amount, conversionRate) {
+    if (typeof amount !== 'number') {
+      throw new TypeError('amount must be a number');
     }
 
-    // Getters
-    get amount() {
-        return this._amount;
+    if (typeof conversionRate !== 'number') {
+      throw new TypeError('conversionRate must be a number');
     }
 
-    get currency() {
-        return this._currency;
-    }
-
-    //Setters
-
-    set amount(newAmount) {
-        this._amount = newAmount;
-
-    }
-
-    set currency(newCurrency) {
-        this._currency = newCurrency;
-    }
-
-    displayFullPrice() {
-        return this._amount + " " + this.name + " " + '(' + this._code + ')'
-
-    }
-
-    static convertPrice(amount, conversionRate) {
-        return (amount * conversionRate);
-    }
-
-
+    return amount * conversionRate;
+  }
 }
+
+export default Pricing;
